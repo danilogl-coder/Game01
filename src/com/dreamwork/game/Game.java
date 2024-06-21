@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import com.dreamwork.entities.Entity;
 import com.dreamwork.entities.Player;
 import com.dreamwork.graphic.Spritesheet;
+import com.dreamwork.world.World;
 
 public class Game extends Canvas implements Runnable, KeyListener{
 	
@@ -31,6 +32,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	private BufferedImage image;
 	public List<Entity> entities;
 	public static Spritesheet spritesheet;
+	public static World world;
 	private Player player;
 	
 	
@@ -51,6 +53,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	 image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
 	 entities = new ArrayList<Entity>();
 	 spritesheet = new Spritesheet("/spritesheet.png");
+	 world = new World("/map.png");
 	 player = new Player(0,0,16,16,spritesheet.getSprite(35, 1, 16, 16));
 	 entities.add(player);
 	 }
@@ -88,6 +91,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			g.setColor(new Color(90,90,90));
 			g.fillRect(0, 0, WIDTH*SCALE, HEIGHT*SCALE);
 			
+			//--- World ------//
+			world.render(g);
 			
 			//--- Entities ---//
 			 for(int i = 0; i < entities.size(); i++)
