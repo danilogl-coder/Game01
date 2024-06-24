@@ -25,15 +25,14 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	//-- Tamanho da Tela -- //
-	public static int WIDTH = 640, HEIGHT = 480;
-	public static int SCALE = 1;
-	// ------------------- //
+	public static int WIDTH = 240, HEIGHT = 160;
+	public static int SCALE = 3;
 	//variaveis
 	private BufferedImage image;
-	public List<Entity> entities;
+	public static  List<Entity> entities;
 	public static Spritesheet spritesheet;
 	public static World world;
-	private Player player;
+	public static Player player;
 	
 	
 	
@@ -53,9 +52,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	 image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
 	 entities = new ArrayList<Entity>();
 	 spritesheet = new Spritesheet("/spritesheet.png");
-	 world = new World("/map.png");
 	 player = new Player(0,0,16,16,spritesheet.getSprite(35, 1, 16, 16));
 	 entities.add(player);
+	 world = new World("/map.png");
 	 }
 	 
 	 public void initFrame()
@@ -63,6 +62,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		 JFrame frame = new JFrame();
 			frame.add(this);
 			frame.pack();
+			frame.setResizable(false);
 			frame.setLocationRelativeTo(null);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
@@ -104,7 +104,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			
 			g.dispose();
 			g = bs.getDrawGraphics();
-		    g.drawImage(image, 0, 0, WIDTH*3, HEIGHT*3, null );
+		    g.drawImage(image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null );
 			
 			
 			bs.show();

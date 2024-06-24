@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import com.dreamwork.game.Game;
+import com.dreamwork.world.Camera;
+import com.dreamwork.world.World;
 
 
 
@@ -94,26 +96,30 @@ public class Player extends Entity
 			 }
 		 }
 	 }
+	 
+	 //Camera do jogador
+	 Camera.x = Camera.clamp(this.getX() - (Game.WIDTH/2) + (this.width / 2), 0, World.WIDTH*16 - Game.WIDTH);
+	 Camera.y = Camera.clamp(this.getY() -  (Game.HEIGHT/2) + (this.height / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
 	}
 	
 	public void render(Graphics g)
 	{
 		if(right)
 		{
-			g.drawImage(right_player[curAnimation],this.getX(),this.getY(), null);
+			g.drawImage(right_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);
 		}
 		else if(left)
 		{
-			g.drawImage(left_player[curAnimation],this.getX(),this.getY(), null);	
+			g.drawImage(left_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);	
 		} else if(up)
 		{
-			g.drawImage(up_player[curAnimation],this.getX(),this.getY(), null);	
+			g.drawImage(up_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);	
 		}  else if(down)
 		{
-			g.drawImage(down_player[curAnimation],this.getX(),this.getY(), null);	
+			g.drawImage(down_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);	
 		} else 
 		{
-			g.drawImage(wait_player[0] == null? wait_player[0] = Game.spritesheet.getSprite(35,1,16,16) : wait_player[0] ,this.getX(),this.getY(), null);	
+			g.drawImage(wait_player[0] == null? wait_player[0] = Game.spritesheet.getSprite(35,1,16,16) : wait_player[0] ,this.getX() - Camera.x ,this.getY() - Camera.y, null);	
 		}
 		
 	}

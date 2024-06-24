@@ -3,8 +3,16 @@ package com.dreamwork.entities;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import com.dreamwork.game.Game;
+import com.dreamwork.world.Camera;
+
 public class Entity {
 
+	public static BufferedImage LifeHeart_EN = Game.spritesheet.getSprite(120, 1, 16, 16);
+	public static BufferedImage Weapon_EN = Game.spritesheet.getSprite(120, 18, 16, 16);
+	public static BufferedImage Ammo_EN = Game.spritesheet.getSprite(120, 35, 16, 16);
+	public static BufferedImage EnemySlime_EN = Game.spritesheet.getSprite(35, 69, 16, 16);
+	
 	protected double x;
 	protected double y;
 	protected int width;
@@ -67,7 +75,7 @@ public class Entity {
 	
 	public void render(Graphics g)
 	{
-		g.drawImage(sprite, this.getX(),this.getY(), null);
+		g.drawImage(sprite, this.getX() - Camera.x,this.getY() - Camera.y, null);
 	}
 	
 }

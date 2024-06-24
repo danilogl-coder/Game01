@@ -6,6 +6,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.dreamwork.entities.Ammo;
+import com.dreamwork.entities.EnemySlime;
+import com.dreamwork.entities.Entity;
+import com.dreamwork.entities.Gun;
+import com.dreamwork.entities.HeartLife;
+import com.dreamwork.game.Game;
+
 public class World {
 	
 	private Tile[] tiles;
@@ -27,6 +34,7 @@ public class World {
 				for(int yy = 0; yy < map.getHeight(); yy++)
 				{
 					int pixelAtual = pixels[xx + (yy*map.getWidth())];
+					tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16,yy*16,Tile.Tile_Grass1);
 					if(pixelAtual == 0xFF00FF21)
 					{
 						//Grama 1
@@ -45,14 +53,31 @@ public class World {
 					else if(pixelAtual == 0xFFFF7F7F)
 					{
 						//Player
-						tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16,yy*16,Tile.Tile_Grass1);
-					} 
-					else
-					{
-						//Floor
-						tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16,yy*16,Tile.Tile_Grass1);
+						Game.player.setX(xx*16);
+						Game.player.setY(yy*16);
 						
 					}
+					else if(pixelAtual == 0xFF7F0000)
+					{
+						//EnemeySlime
+						Game.entities.add(new EnemySlime(xx*16,yy*16,16,16,Entity.EnemySlime_EN));
+					}
+					else if(pixelAtual == 0xFFFF0000)
+					{
+						//Heart
+						Game.entities.add(new HeartLife(xx*16,yy*16,16,16,Entity.LifeHeart_EN));
+					}
+					else if(pixelAtual == 0xFFFFD800)
+					{
+						//Ammo
+						Game.entities.add(new Ammo(xx*16,yy*16,16,16,Entity.Ammo_EN));
+					}
+					else if(pixelAtual == 0xFF000000)
+					{
+						//Gun
+						Game.entities.add(new Gun(xx*16,yy*16,16,16,Entity.Weapon_EN));
+					}
+					
 				}
 			}
 		} catch (IOException e) {
@@ -63,10 +88,21 @@ public class World {
 	
 	public void render(Graphics g) 
 	{
-		for(int xx = 0; xx < WIDTH; xx++)
+		int xstart = Camera.x >> 4;
+		int ystart = Camera.y >> 4;
+		
+		int xfinal = xstart + (Game.WIDTH >> 4);
+		int yfinal = ystart + (Game.HEIGHT >> 4);
+		
+		
+		for(int xx = xstart; xx <= xfinal; xx++)
 		{
-			for(int yy = 0; yy < HEIGHT; yy++)
+			for(int yy = ystart; yy <= yfinal; yy++)
 			{
+				if(xx < 0 || yy < 0 || xx >= WIDTH || yy >= HEIGHT)
+				{
+					continue;
+				}
 				Tile tile = tiles[xx + (yy*WIDTH)];
 				tile.render(g);
 			}
