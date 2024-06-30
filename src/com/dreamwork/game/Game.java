@@ -10,12 +10,15 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFrame;
 
+import com.dreamwork.entities.EnemySlime;
 import com.dreamwork.entities.Entity;
 import com.dreamwork.entities.Player;
 import com.dreamwork.graphic.Spritesheet;
+import com.dreamwork.graphic.Ui;
 import com.dreamwork.world.World;
 
 public class Game extends Canvas implements Runnable, KeyListener{
@@ -30,9 +33,12 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	//variaveis
 	private BufferedImage image;
 	public static  List<Entity> entities;
+	public static List<EnemySlime> enemies;
 	public static Spritesheet spritesheet;
 	public static World world;
 	public static Player player;
+	public static Random rand;
+	public Ui ui;
 	
 	
 	
@@ -43,7 +49,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	 //Estancia da classe Game
 	 public Game()
 	 {
-	 // -- Tamnho da tela -- //
+	 //Estancia do Random
+	 rand = new Random();
+	 // -- Tamanho da tela -- //
 	 this.setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 	 initFrame();
 	 // -- Inicializado teclado -- //
@@ -51,7 +59,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	 // INICIALIZANDO OBJETOS.
 	 image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
 	 entities = new ArrayList<Entity>();
+	 enemies = new ArrayList<EnemySlime>();
 	 spritesheet = new Spritesheet("/spritesheet.png");
+	 // Inicializando UI(Vida)
+	 ui = new Ui();
+	 // --------------//
 	 player = new Player(0,0,16,16,spritesheet.getSprite(35, 1, 16, 16));
 	 entities.add(player);
 	 world = new World("/map.png");
@@ -102,6 +114,10 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			 }
 			//---------------//
 			
+			//Render Ui //
+			ui.render(g);
+			 
+			
 			g.dispose();
 			g = bs.getDrawGraphics();
 		    g.drawImage(image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null );
@@ -122,6 +138,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	@Override
 	public void run() 
 	{
+		//Pedir foco na tela
+		requestFocus();
 		// Tick(FPS)
 		long lastTime = System.nanoTime();
 		double amountOfTicks = 60.0;

@@ -15,8 +15,9 @@ import com.dreamwork.game.Game;
 
 public class World {
 	
-	private Tile[] tiles;
+	public static Tile[] tiles;
 	public static int WIDTH, HEIGHT;
+	public static final int Tile_Size = 16;
 	
 	public World(String path)
 	{
@@ -48,7 +49,7 @@ public class World {
 					else if(pixelAtual == 0xFF404040)
 					{
 						//Parede
-						tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16,yy*16,Tile.Tile_Wall);
+						tiles[xx + (yy * WIDTH)] = new WallTile(xx*16,yy*16,Tile.Tile_Wall);
 					}
 					else if(pixelAtual == 0xFFFF7F7F)
 					{
@@ -60,7 +61,9 @@ public class World {
 					else if(pixelAtual == 0xFF7F0000)
 					{
 						//EnemeySlime
-						Game.entities.add(new EnemySlime(xx*16,yy*16,16,16,Entity.EnemySlime_EN));
+						EnemySlime en = new EnemySlime(xx*16,yy*16,16,16,Entity.EnemySlime_EN);
+						Game.entities.add(en);
+						Game.enemies.add(en);
 					}
 					else if(pixelAtual == 0xFFFF0000)
 					{
@@ -84,6 +87,26 @@ public class World {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static boolean isFree(int xNext, int yNext)
+	{
+		int x1 = xNext/Tile_Size;
+		int y1 = yNext/Tile_Size;
+		
+		int x2 = (xNext+Tile_Size - 1) /Tile_Size;
+		int y2 = yNext/Tile_Size;
+		
+		int x3 = xNext/Tile_Size;
+		int y3 = (yNext+Tile_Size - 1) /Tile_Size;
+		
+		int x4 = (xNext+Tile_Size - 1) /Tile_Size;
+		int y4 = (yNext+Tile_Size - 1) /Tile_Size;
+		
+		return !((tiles[x1 + (y1 * World.WIDTH)] instanceof WallTile) || 
+				(tiles[x2 + (y2 * World.WIDTH)] instanceof WallTile) || 
+				(tiles[x3 + (y3 * World.WIDTH)] instanceof WallTile) ||
+				(tiles[x4 + (y4 * World.WIDTH)] instanceof WallTile) );
 	}
 	
 	public void render(Graphics g) 

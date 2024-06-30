@@ -22,6 +22,8 @@ public class Player extends Entity
 	private BufferedImage[] down_player;
 	private BufferedImage[] wait_player;
 	
+	public static double life = 100 , maxLife = 100;
+	
 	public Player(int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, sprite);
 		// TODO Auto-generated constructor stub
@@ -60,23 +62,23 @@ public class Player extends Entity
 	public void tick()
 	{
 	 moves = false;
-	 if(right )
+	 if(right && World.isFree( (int)(x+speed), this.getY()))
 	 {
 		this.setX(x+=speed);
 		wait_player[0] = Game.spritesheet.getSprite(35,35,16,16);
 		moves = true;
-	 } else if(left )
+	 } else if(left && World.isFree( (int)(x-speed), this.getY()))
 	 	{
 		 this.setX(x-=speed);
 		 wait_player[0] = Game.spritesheet.getSprite(35,52,16,16);
 		 moves = true;
 	 	}
-	 if(up )
+	 if(up && World.isFree(this.getX(), (int)(y-speed)))
 	 {
 		 this.setY(y-=speed);
 		 wait_player[0] = Game.spritesheet.getSprite(35,18,16,16);
 		 moves = true;
-	 } else if(down)
+	 } else if(down && World.isFree(this.getX(), (int)(y + speed)))
 	 	{
 		 this.setY(y+=speed);
 		 wait_player[0] = Game.spritesheet.getSprite(35,1,16,16);
