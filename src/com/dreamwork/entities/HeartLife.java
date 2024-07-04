@@ -9,4 +9,5 @@ public class HeartLife extends Entity{
 		// TODO Auto-generated constructor stub
 	}
 
+	
 }

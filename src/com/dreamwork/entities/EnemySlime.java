@@ -34,9 +34,10 @@ public class EnemySlime extends Entity {
 	public void tick()
 	{
 		moves= false;
+		
 		if(isCollidingWithPlayer() ==  false)
 		{
-			
+		
 		if((int)x < Game.player.getX() && World.isFree((int)(x+speed), this.getY()) && !isColliding((int)(x+speed), this.getY()))
 		{
 			moves = true;
@@ -58,17 +59,16 @@ public class EnemySlime extends Entity {
 		
 		} else 
 		{
+			Game.player.hurt = true;
 			//Estamos colidindo
 			if(Game.rand.nextInt(100) < 10)
 			{
-			Player.life--;
+			
+			Game.player.life -= 5;
 			}
-			System.out.println(Player.life);
-			if(Player.life <= 0)
-			{
-				//Game over
-				System.exit(1);
-			}
+			System.out.println(Game.player.life);
+			
+			
 		}
 		 if(moves)
 		 {

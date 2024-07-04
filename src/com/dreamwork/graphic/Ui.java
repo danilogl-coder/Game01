@@ -19,10 +19,10 @@ public class Ui {
 		g.setColor(Color.red);
 		g.fillRect(20, 4, 50, 8);
 		g.setColor(Color.GREEN);
-		g.fillRect(20, 4, (int)((Player.life / Player.maxLife) * 50), 8);
+		g.fillRect(20, 4, (int)((Game.player.life / Game.player.maxLife) * 50), 8);
 		g.drawImage(lifeBar, 20, 4, 50, 8, null);
 		g.setColor(Color.white);
 		g.setFont(new Font("arial", Font.BOLD, 8));
-		g.drawString((int)Player.life+"/"+(int)Player.maxLife, 30, 11);
+		g.drawString((int)Game.player.life+"/"+(int)Game.player.maxLife, 30, 11);
 	}
 }
