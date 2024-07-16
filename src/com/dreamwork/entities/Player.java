@@ -17,11 +17,13 @@ public class Player extends Entity
 	public double speed  = 1.0;
 	public int curAnimation = 0, curAnimationHurt = 0;;
 	public int curFrames = 0, curFramesHurt =0, targetFrames = 10, targetFramesHurt = 10;
+	public int mx,my;
 	private boolean moves;
 	public int ammo = 0;
 	public boolean hurt;
+	public boolean shoot = false, mouseShoot = false;
 	private boolean hasGun = false;
-	private int wait_gun;
+	public int wait_gun;
 	private BufferedImage[] right_player;
 	private BufferedImage[] left_player;
 	private BufferedImage[] up_player;
@@ -102,6 +104,61 @@ public class Player extends Entity
 		 moves = true;
 	 	}
 	 
+	 if(shoot && hasGun == false)
+	 shoot = false;
+	 if(shoot && hasGun && ammo == 0)
+	 shoot = false;
+	 
+	 if(shoot && hasGun && ammo > 0)
+	 {
+		 //Criar bala.
+		 shoot = false;
+		 ammo --;
+		 
+		 int dx = 0;
+		 int dy = 0;
+		
+		 if(right || wait_gun == 0)
+		 {
+			 dx = 1;
+		 }
+		 else if(left  || wait_gun == 1)
+		 {
+			 dx = -1;
+		 }
+		 else if(up  || wait_gun == 2)
+		 {
+			  dy = -1;
+		 }
+		 else if(down  || wait_gun == 3)
+		 {
+			  dy = 1;
+		 }
+		 
+		 Bullet bullet = new Bullet(this.getX(), this.getY(),3,3,null,dx,dy);
+		 Game.bullet.add(bullet);
+		 
+		
+	 }
+	 
+	 if(mouseShoot && hasGun && ammo > 0)
+	 { 
+		 double angle = Math.atan2( my - (this.getY()+8 - Camera.y), mx - (this.getX()+8 - Camera.x));
+		 System.out.println(angle);
+		 //System.out.println("Funciona");
+		//Criar bala.
+		
+		 mouseShoot = false;
+		 ammo --;
+		 
+		 double dx = Math.cos(angle);
+		 double dy = Math.sin(angle);
+		
+		 Bullet bullet = new Bullet(this.getX(), this.getY(),3,3,null,dx,dy);
+		 Game.bullet.add(bullet);
+	 }
+	 
+	 
 	 if(moves)
 	 {
 		 curFrames++;
@@ -137,15 +194,9 @@ public class Player extends Entity
 	 
 	 if(life <= 0)
 		{
-		 Game.entities.clear();
-		 Game.enemies.clear();
-		 Game.entities = new ArrayList<Entity>();
-		 Game.enemies = new ArrayList<EnemySlime>();
-		 Game.spritesheet = new Spritesheet("/spritesheet.png");
-		 Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(35, 1, 16, 16));
-		 Game.entities.add(Game.player);
-		 Game.world = new World("/map.png");
-		 return;
+		 life = 0;
+		// --- Game over --- //
+		 Game.gameState = "gameOver";
 		}
 	 
 	 //Camera do jogador

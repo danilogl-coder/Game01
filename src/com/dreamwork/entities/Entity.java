@@ -13,6 +13,7 @@ public class Entity {
 	public static BufferedImage Weapon_EN = Game.spritesheet.getSprite(120, 18, 16, 16);
 	public static BufferedImage Ammo_EN = Game.spritesheet.getSprite(120, 35, 16, 16);
 	public static BufferedImage EnemySlime_EN = Game.spritesheet.getSprite(35, 69, 16, 16);
+	public static BufferedImage EnemySlime_FEDBACK = Game.spritesheet.getSprite(35, 86, 16, 16);
 	public static BufferedImage Gun_Left = Game.spritesheet.getSprite(137, 18, 16, 16);
 	public static BufferedImage Gun_Right = Game.spritesheet.getSprite(120, 18, 16, 16);
 	public static BufferedImage Gun_Up = Game.spritesheet.getSprite(137, 1, 16, 16);

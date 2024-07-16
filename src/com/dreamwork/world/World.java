@@ -3,6 +3,7 @@ package com.dreamwork.world;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -11,7 +12,9 @@ import com.dreamwork.entities.EnemySlime;
 import com.dreamwork.entities.Entity;
 import com.dreamwork.entities.Gun;
 import com.dreamwork.entities.HeartLife;
+import com.dreamwork.entities.Player;
 import com.dreamwork.game.Game;
+import com.dreamwork.graphic.Spritesheet;
 
 public class World {
 	
@@ -87,6 +90,19 @@ public class World {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void restartGame(String level)
+	{
+		 Game.entities.clear();
+		 Game.enemies.clear();
+		 Game.entities = new ArrayList<Entity>();
+		 Game.enemies = new ArrayList<EnemySlime>();
+		 Game.spritesheet = new Spritesheet("/spritesheet.png");
+		 Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(35, 1, 16, 16));
+		 Game.entities.add(Game.player);
+		 Game.world = new World("/"+level);
+		 return;
 	}
 	
 	public static boolean isFree(int xNext, int yNext)

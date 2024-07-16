@@ -17,6 +17,10 @@ public class EnemySlime extends Entity {
 	private boolean moves;
 	public int curAnimation = 0;
 	public int curFrames = 0, targetFrames = 11;
+	private int life = 5;
+	private boolean isDamaged = false;
+	int DamagedFrames = 0;
+	int DamageTargetFrames = 10;
 
 	public EnemySlime(int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, sprite);
@@ -83,6 +87,49 @@ public class EnemySlime extends Entity {
 				 }
 			 }
 		 }
+		 
+		 collidingBullet();
+		 
+		 if(life == 0)
+		 {
+			 destroySelf();
+		 }
+		 
+		 if(isDamaged)
+		 {
+		
+			DamagedFrames++;
+			if(DamagedFrames == DamageTargetFrames)
+			{
+				DamagedFrames = 0;
+				isDamaged = false;
+			}
+		 }
+	}
+	
+	public void destroySelf()
+	{
+		Game.enemies.remove(this);
+		Game.entities.remove(this);
+		return;
+	}
+	public void collidingBullet()
+	{
+		for(int i = 0; i < Game.bullet.size(); i++)
+		{
+			Entity e = Game.bullet.get(i);
+			if(e instanceof Bullet)
+			{
+				if(Entity.isColliding(this, e))
+				{
+					life --;
+					isDamaged = true;
+					Game.bullet.remove(e);
+					return;
+				}
+			}
+		}
+	
 	}
 	
 	public boolean isCollidingWithPlayer()
@@ -115,12 +162,18 @@ public class EnemySlime extends Entity {
 	{
 		//super herda tudo do metodo pai 
 		//super.render(g);
+		if(isDamaged)
+		{
+			g.drawImage(Entity.EnemySlime_FEDBACK, this.getX() - Camera.x,this.getY() - Camera.y, null);
+		
+		}else {
 		if(moves)
 		{
 		g.drawImage(spriteSlime[curAnimation], this.getX() - Camera.x,this.getY() - Camera.y, null);
 		}else 
 		{
 		g.drawImage(spriteSlime[0], this.getX() - Camera.x,this.getY() - Camera.y, null);
+		}
 		}
 		
 		//mask
