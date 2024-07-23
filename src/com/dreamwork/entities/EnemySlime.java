@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import com.dreamwork.game.Game;
+import com.dreamwork.game.Sound;
 import com.dreamwork.world.Camera;
 import com.dreamwork.world.World;
 
@@ -65,10 +66,12 @@ public class EnemySlime extends Entity {
 		{
 			Game.player.hurt = true;
 			//Estamos colidindo
+			
 			if(Game.rand.nextInt(100) < 10)
 			{
-			
+			Sound.Hurt.play();
 			Game.player.life -= 5;
+			
 			}
 			System.out.println(Game.player.life);
 			

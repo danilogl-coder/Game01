@@ -61,6 +61,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	 //Estancia da classe Game
 	 public Game()
 	 {
+	 Sound.MusicBackground.loop();
 	 //Estancia do Random
 	 rand = new Random();
 	 // -- Tamanho da tela -- //
@@ -297,7 +298,19 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		
 		if(e.getKeyCode() == KeyEvent.VK_ENTER)
 		{
-			this.restartGame = true;
+			if(menu.options[menu.currentOption] == "new game" || player.life == 0){
+				this.restartGame = true;
+			} 
+			if(gameState == "menu")
+			{
+				menu.enter = true;
+			}
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+		{
+			gameState = "menu";
+			menu.pause = true;
 		}
 		
 	}

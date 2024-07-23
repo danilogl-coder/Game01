@@ -6,10 +6,11 @@ import java.awt.Graphics;
 
 public class Menu 
 {
-	public String[] options = {"novo jogo", "carregar jogo", "sair"};
+	public String[] options = {"novo jogo", "carregar jogo", "sair", "continuar"};
 	public int currentOption = 0;
 	public int maxOption = options.length -1;
-	public boolean up, down;
+	public boolean up, down, enter;
+	public boolean pause = false;
 	public void tick()
 	{
 		if(up)
@@ -30,6 +31,21 @@ public class Menu
 				currentOption = 0;
 			}
 		}
+		if(enter)
+		{
+			enter = false;
+			if(options[currentOption] == "novo jogo" || options[currentOption] == "continuar")
+			{
+				
+				Game.gameState = "normal";
+				pause = false;
+				
+			}
+			else if(options[currentOption] == "sair" )
+			{
+				System.exit(3);
+			}
+		}
 	}
 	
 	public void render(Graphics g)
@@ -43,7 +59,14 @@ public class Menu
 		//Opções de menu
 		g.setColor(Color.white);
 		g.setFont(new Font("arial",Font.BOLD,24));
-		g.drawString("Novo jogo", (Game.WIDTH*Game.SCALE) / 2 - 70, 160);
+		if(pause == false)
+		{
+			g.drawString("Novo jogo", (Game.WIDTH*Game.SCALE) / 2 - 70, 160);
+		} else 
+		{
+			g.drawString("Continuar", (Game.WIDTH*Game.SCALE) / 2 - 70, 160);
+		}
+		
 		g.drawString("Carregar jogo", (Game.WIDTH*Game.SCALE) / 2 - 70, 190);
 		g.drawString("Sair do jogo", (Game.WIDTH*Game.SCALE) / 2 - 70, 220);
 		
