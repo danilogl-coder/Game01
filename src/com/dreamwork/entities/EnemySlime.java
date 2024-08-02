@@ -40,7 +40,7 @@ public class EnemySlime extends Entity {
 	{
 		moves= false;
 		
-		if(isCollidingWithPlayer() ==  false)
+		if(isCollidingWithPlayer() ==  false || Game.player.z > 0)
 		{
 		
 		if((int)x < Game.player.getX() && World.isFree((int)(x+speed), this.getY()) && !isColliding((int)(x+speed), this.getY()))

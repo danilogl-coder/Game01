@@ -119,10 +119,26 @@ public class World {
 		int x4 = (xNext+Tile_Size - 1) /Tile_Size;
 		int y4 = (yNext+Tile_Size - 1) /Tile_Size;
 		
+		/*if(!((tiles[x1 + (y1 * World.WIDTH)] instanceof WallTile) || 
+				(tiles[x2 + (y2 * World.WIDTH)] instanceof WallTile) || 
+				(tiles[x3 + (y3 * World.WIDTH)] instanceof WallTile) ||
+				(tiles[x4 + (y4 * World.WIDTH)] instanceof WallTile) ))
+		{
+			return true;
+		}
+		if(Game.player.z > 0)
+		{
+			return true;
+		}
+		return false;
+		*/
+		
+		
 		return !((tiles[x1 + (y1 * World.WIDTH)] instanceof WallTile) || 
 				(tiles[x2 + (y2 * World.WIDTH)] instanceof WallTile) || 
 				(tiles[x3 + (y3 * World.WIDTH)] instanceof WallTile) ||
 				(tiles[x4 + (y4 * World.WIDTH)] instanceof WallTile) );
+		
 	}
 	
 	public void render(Graphics g) 

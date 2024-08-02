@@ -1,5 +1,6 @@
 package com.dreamwork.entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -24,13 +25,19 @@ public class Player extends Entity
 	public boolean shoot = false, mouseShoot = false;
 	private boolean hasGun = false;
 	public int wait_gun;
+	public boolean jump = false;
+	public boolean isJumping = false;
+	public int z = 0;
+	public int jumpFrames = 50, jumpCur = 0;
+	public int jumpspd = 1;
+	public boolean jumpUp = false, jumpDown = false;
 	private BufferedImage[] right_player;
 	private BufferedImage[] left_player;
 	private BufferedImage[] up_player;
 	private BufferedImage[] down_player;
 	private BufferedImage[] wait_player;
 	private BufferedImage[] player_damaged;
-
+	
 	
 	public double life = 100 , maxLife = 100;
 	public Player(int x, int y, int width, int height, BufferedImage sprite) {
@@ -76,27 +83,65 @@ public class Player extends Entity
 	
 	public void tick()
 	{
+	 
+	 
+	 if(jump)
+	 {
+		 
+		 if(isJumping == false)
+		 {
+			 jump = false;
+			 isJumping = true;
+			 jumpUp = true;
+		 }
+	 }
+		 if(isJumping == true)
+		 {
+			
+				 if(jumpUp)
+				 {
+				 jumpCur+=jumpspd;
+				 }else if(jumpDown)
+				 {
+				 jumpCur-=jumpspd;
+				 if(jumpCur <= 0)
+				 {
+					 isJumping = false;
+					 jumpUp = false;
+					 jumpDown = false;
+				 }
+				 }
+				 z = jumpCur;
+				 if(jumpCur  >= jumpFrames)
+				 {
+					 jumpUp = false;
+					 jumpDown = true;
+				 }
+			 
+		 }
+		 
+	
 	 moves = false;
-	 if(right && World.isFree( (int)(x+speed), this.getY()))
+	 if(right && (World.isFree((int)(x+speed), this.getY())) || right && z > 0 )
 	 {
 		this.setX(x+=speed);
 		wait_player[0] = Game.spritesheet.getSprite(35,35,16,16);
 		wait_gun = 0;
 		moves = true;
-	 } else if(left && World.isFree( (int)(x-speed), this.getY()))
+	 } else if(left && World.isFree( (int)(x-speed), this.getY()) || left && z > 0)
 	 	{
 		 this.setX(x-=speed);
 		 wait_player[0] = Game.spritesheet.getSprite(35,52,16,16);
 		 wait_gun = 1;
 		 moves = true;
 	 	}
-	 if(up && World.isFree(this.getX(), (int)(y-speed)))
+	 if(up && World.isFree(this.getX(), (int)(y-speed)) || up && z > 0)
 	 {
 		 this.setY(y-=speed);
 		 wait_player[0] = Game.spritesheet.getSprite(35,18,16,16);
 		 wait_gun = 2;
 		 moves = true;
-	 } else if(down && World.isFree(this.getX(), (int)(y + speed)))
+	 } else if(down && World.isFree(this.getX(), (int)(y + speed)) || down && z > 0)
 	 	{
 		 this.setY(y+=speed);
 		 wait_player[0] = Game.spritesheet.getSprite(35,1,16,16);
@@ -135,7 +180,7 @@ public class Player extends Entity
 			  dy = 1;
 		 }
 		 
-		 Bullet bullet = new Bullet(this.getX(), this.getY(),3,3,null,dx,dy);
+		 Bullet bullet = new Bullet(this.getX(), this.getY() - z,3,3,null,dx,dy);
 		 Game.bullet.add(bullet);
 		 
 		
@@ -154,7 +199,7 @@ public class Player extends Entity
 		 double dx = Math.cos(angle);
 		 double dy = Math.sin(angle);
 		
-		 Bullet bullet = new Bullet(this.getX(), this.getY(),3,3,null,dx,dy);
+		 Bullet bullet = new Bullet(this.getX(), this.getY() -z,3,3,null,dx,dy);
 		 Game.bullet.add(bullet);
 	 }
 	 
@@ -260,37 +305,37 @@ public class Player extends Entity
 		{
 			if(right)
 			{
-				g.drawImage(right_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);
+				g.drawImage(right_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y -z, null);
 				if(hasGun)
 				{
 					//Desenhar arma
-					g.drawImage(Entity.Gun_Right,this.getX() + 8 - Camera.x,this.getY() - Camera.y, null);
+					g.drawImage(Entity.Gun_Right,this.getX() + 8 - Camera.x,this.getY() - Camera.y -z, null);
 					
 				}
 			}
 			else if(left)
 			{
-				g.drawImage(left_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);	
+				g.drawImage(left_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y -z, null);	
 				if(hasGun)
 				{
 					//Desenhar arma
-					g.drawImage(Entity.Gun_Left,this.getX() -2  - Camera.x,this.getY() - Camera.y, null);
+					g.drawImage(Entity.Gun_Left,this.getX() -2  - Camera.x,this.getY() - Camera.y -z, null);
 				}
 			} else if(up)
 			{
 				if(hasGun)
 				{
 					//Desenhar arma
-					g.drawImage(Entity.Gun_Up,this.getX() + 4 - Camera.x,this.getY() - Camera.y, null);
+					g.drawImage(Entity.Gun_Up,this.getX() + 4 - Camera.x,this.getY() - Camera.y -z, null);
 				}
-				g.drawImage(up_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);	
+				g.drawImage(up_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y -z, null);	
 			}  else if(down)
 			{
-				g.drawImage(down_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);	
+				g.drawImage(down_player[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y -z, null);	
 				if(hasGun)
 				{
 					//Desenhar arma
-					g.drawImage(Entity.Gun_Down,this.getX() + 3 - Camera.x,this.getY() - Camera.y, null);
+					g.drawImage(Entity.Gun_Down,this.getX() + 3 - Camera.x,this.getY() - Camera.y -z, null);
 				}
 			} else 
 			{
@@ -298,36 +343,43 @@ public class Player extends Entity
 				{
 					if(wait_gun == 2)
 					{
-						g.drawImage(Entity.Gun_Up,this.getX() + 4 - Camera.x,this.getY() - Camera.y, null);
+						g.drawImage(Entity.Gun_Up,this.getX() + 4 - Camera.x,this.getY() - Camera.y -z, null);
 					}
 				}
-				g.drawImage(wait_player[0] == null? wait_player[0] = Game.spritesheet.getSprite(35,1,16,16) : wait_player[0] ,this.getX() - Camera.x ,this.getY() - Camera.y, null);
+				g.drawImage(wait_player[0] == null? wait_player[0] = Game.spritesheet.getSprite(35,1,16,16) : wait_player[0] ,this.getX() - Camera.x ,this.getY() - Camera.y -z, null);
 				if(hasGun)
 				{
 					if(wait_gun == 0)
 					{
-						g.drawImage(Entity.Gun_Right,this.getX() + 8 - Camera.x,this.getY() - Camera.y, null);
+						g.drawImage(Entity.Gun_Right,this.getX() + 8 - Camera.x,this.getY() - Camera.y -z, null);
 						
 					}
 					else if(wait_gun == 1)
 					{
-						g.drawImage(Entity.Gun_Left,this.getX() -2  - Camera.x,this.getY() - Camera.y, null);
+						g.drawImage(Entity.Gun_Left,this.getX() -2  - Camera.x,this.getY() - Camera.y -z, null);
 					}
 				
 					else if(wait_gun == 3)
 					{
-						g.drawImage(Entity.Gun_Down,this.getX() + 3 - Camera.x,this.getY() - Camera.y, null);
+						g.drawImage(Entity.Gun_Down,this.getX() + 3 - Camera.x,this.getY() - Camera.y -z, null);
 					}
 				}
 			}
 		} else 
 		{
-			g.drawImage(player_damaged[curAnimationHurt], this.getX() - Camera.x, this.getY() - Camera.y , null);
+			g.drawImage(player_damaged[curAnimationHurt], this.getX() - Camera.x, this.getY() - Camera.y -z, null);
+		}
+		
+		if(isJumping)
+		{
+			g.setColor(Color.black);
+			g.fillOval(this.getX() - Camera.x + 4,this.getY() - Camera.y + 16, 8,8);
 		}
 		
 		
 	}
 
+	
 	
 
 }

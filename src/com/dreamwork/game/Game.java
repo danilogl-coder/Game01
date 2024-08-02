@@ -49,6 +49,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public static Random rand;
 	private boolean showMessageGameOver = true;
 	private boolean restartGame = false;
+	public boolean saveGame = false;
 	private int framesGameOver = 0;
 	public Ui ui;
 	public Menu menu;
@@ -61,7 +62,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	 //Estancia da classe Game
 	 public Game()
 	 {
-	 Sound.MusicBackground.loop();
+	 //Musica
+	 //Sound.MusicBackground.loop();
+		 
 	 //Estancia do Random
 	 rand = new Random();
 	 // -- Tamanho da tela -- //
@@ -100,6 +103,16 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	 {
 		 if(gameState == "normal")
 		 {
+		 
+		 if(this.saveGame)
+		 {
+			 this.saveGame = false;
+			 String[] opt1 = {"level","vida"};
+			 int[] opt2 = {this.Cur_Level,(int)player.life};
+			 Menu.saveGame(opt1,opt2,10);
+			 System.out.println("Jogo salvo");
+		 }
+		 
 		 this.restartGame = false;
 		 for(int i = 0; i < entities.size(); i++)
 		 {
@@ -274,6 +287,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+		
+		if(e.getKeyCode() == KeyEvent.VK_X) {
+			player.jump = true;
+		}
+		
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			player.right = true;
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT)
@@ -298,7 +316,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		
 		if(e.getKeyCode() == KeyEvent.VK_ENTER)
 		{
-			if(menu.options[menu.currentOption] == "new game" || player.life == 0){
+			if(menu.options[menu.currentOption] == "new game" || player.life == 0 || player.life < 0){
 				this.restartGame = true;
 			} 
 			if(gameState == "menu")
@@ -311,6 +329,19 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		{
 			gameState = "menu";
 			menu.pause = true;
+			
+			
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_SPACE)
+		{
+			if(Game.gameState == "normal")
+			{
+				this.saveGame = true;
+			}
+			
+			
+			
 		}
 		
 	}
