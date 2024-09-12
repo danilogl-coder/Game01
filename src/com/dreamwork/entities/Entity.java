@@ -3,9 +3,12 @@ package com.dreamwork.entities;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import com.dreamwork.game.Game;
 import com.dreamwork.world.Camera;
+import com.dreamwork.world.Node;
+import com.dreamwork.world.Vector2i;
 
 public class Entity {
 
@@ -25,8 +28,8 @@ public class Entity {
 	protected int width;
 	protected int height;
 	private BufferedImage sprite;
-	private int maskx,  masky,  mwidth,  mheight;
-	
+	protected int maskx,  masky,  mwidth,  mheight;
+	protected List<Node> path;
 	
 	
 	public Entity(int x, int y, int width, int height, BufferedImage sprite)
@@ -42,6 +45,57 @@ public class Entity {
 		this.mheight = height;
 	}
 	
+	public boolean isColliding(int xnext, int ynext)
+	{
+		Rectangle enemyCurrent = new Rectangle(xnext + maskx, ynext + masky, mwidth, mheight);
+		for(int i = 0; i < Game.enemies.size(); i++)
+		{
+			EnemySlime e = Game.enemies.get(i);
+			if(e == this)
+			{
+				continue;
+			}
+			Rectangle targetEnemy = new Rectangle(e.getX() + maskx, e.getY() + masky, mwidth, mheight);
+			if(enemyCurrent.intersects(targetEnemy))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void followPath(List<Node> path)
+	{
+		if(path != null)
+		{
+			if(path.size() > 0)
+			{
+				Vector2i target = path.get(path.size() - 1).tile;
+				//xprev = x;
+				//yprev = y;
+				if(x < target.x * 16 &&  !isColliding(this.getX()+1, this.getY()))
+				{
+					x++;
+				}else if(x > target.x * 16 &&  !isColliding(this.getX()-1, this.getY()))
+				{
+					x--;
+				}
+				
+				if(y < target.y * 16 &&  !isColliding(this.getX(), this.getY() +1))
+				{
+					y++;
+				}else if(y > target.y * 16 &&  !isColliding(this.getX(), this.getY() - 1))
+				{
+					y--;
+				}
+				
+				if(x == target.x * 16 && y == target.y * 16)
+				{
+					path.remove(path.size() - 1);
+				}
+			}
+		}
+	}
 	public void setMask(int maskx, int masky, int mwidth, int mheight)
 	{
 		this.maskx = maskx;
@@ -106,6 +160,13 @@ public class Entity {
 	{
 		
 	}
+	
+	public double calculateDistance(int x1, int y1, int x2,int y2)
+	{
+		return Math.sqrt((x1 - x2) * (x1-x2) + (y1 - y2) * (y1 - y2));
+	}
+	
+	
 	
 	public void render(Graphics g)
 	{

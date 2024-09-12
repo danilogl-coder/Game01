@@ -6,14 +6,16 @@ import java.awt.image.BufferedImage;
 
 import com.dreamwork.game.Game;
 import com.dreamwork.game.Sound;
+import com.dreamwork.world.AStar;
 import com.dreamwork.world.Camera;
+import com.dreamwork.world.Vector2i;
 import com.dreamwork.world.World;
 
 public class EnemySlime extends Entity {
 	
 	private double speed = 0.5;
 	
-	private int maskx = 8,  masky = 8,  maskw = 8,  maskh = 8;
+	
 	private BufferedImage[] spriteSlime;
 	private boolean moves;
 	public int curAnimation = 0;
@@ -39,7 +41,9 @@ public class EnemySlime extends Entity {
 	public void tick()
 	{
 		moves= false;
-		
+		/*
+		if(this.calculateDistance(this.getX(), this.getY(), Game.player.getX(), Game.player.getY()) < 100)
+		{
 		if(isCollidingWithPlayer() ==  false || Game.player.z > 0)
 		{
 		
@@ -77,6 +81,17 @@ public class EnemySlime extends Entity {
 			
 			
 		}
+		
+		}
+		*/
+		
+		if(path == null || path.size() == 0)
+		{
+			Vector2i start = new Vector2i((int)(x / 16),(int)(y/16));
+			Vector2i end = new Vector2i((int)(Game.player.x / 16),(int)(Game.player.y/16));
+			path = AStar.findPath(Game.world,start,end);
+		}
+		followPath(path);
 		 if(moves)
 		 {
 			 curFrames++;
@@ -137,29 +152,12 @@ public class EnemySlime extends Entity {
 	
 	public boolean isCollidingWithPlayer()
 	{
-		Rectangle enemyCurrent = new Rectangle(this.getX() + maskx, this.getY() + masky, maskw, maskh);
+		Rectangle enemyCurrent = new Rectangle(this.getX() + maskx, this.getY() + masky, mwidth, mheight);
 		Rectangle player = new Rectangle(Game.player.getX(), Game.player.getY(), Game.player.getWidth(), Game.player.getHeight());
 		return enemyCurrent.intersects(player);
 	}
 	
-	public boolean isColliding(int xnext, int ynext)
-	{
-		Rectangle enemyCurrent = new Rectangle(xnext + maskx, ynext + masky, maskw, maskh);
-		for(int i = 0; i < Game.enemies.size(); i++)
-		{
-			EnemySlime e = Game.enemies.get(i);
-			if(e == this)
-			{
-				continue;
-			}
-			Rectangle targetEnemy = new Rectangle(e.getX() + maskx, e.getY() + masky, maskw, maskh);
-			if(enemyCurrent.intersects(targetEnemy))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+	
 	
 	public void render(Graphics g)
 	{
