@@ -3,6 +3,7 @@ package com.dreamwork.entities;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import com.dreamwork.game.Game;
 import com.dreamwork.game.Sound;
@@ -40,6 +41,7 @@ public class EnemySlime extends Entity {
 	
 	public void tick()
 	{
+		depth = 0;
 		moves= false;
 		/*
 		if(this.calculateDistance(this.getX(), this.getY(), Game.player.getX(), Game.player.getY()) < 100)
@@ -84,14 +86,27 @@ public class EnemySlime extends Entity {
 		
 		}
 		*/
-		
-		if(path == null || path.size() == 0)
+		if(!isCollidingWithPlayer())
 		{
-			Vector2i start = new Vector2i((int)(x / 16),(int)(y/16));
-			Vector2i end = new Vector2i((int)(Game.player.x / 16),(int)(Game.player.y/16));
-			path = AStar.findPath(Game.world,start,end);
+			if(path == null || path.size() == 0)
+			{
+				Vector2i start = new Vector2i((int)(x / 16),(int)(y/16));
+				Vector2i end = new Vector2i((int)(Game.player.x / 16),(int)(Game.player.y/16));
+				path = AStar.findPath(Game.world,start,end);
+			}
+		} else
+		{
+			if(new Random().nextInt(100) < 5)
+			{
+				Sound.Hurt.play();
+				Game.player.life-=Game.rand.nextInt(3);
+				Game.player.hurt = true;
+			}
 		}
+		
+		if(new Random().nextInt(100) < 70)
 		followPath(path);
+		if(new Random().nextInt(100) < 5)
 		 if(moves)
 		 {
 			 curFrames++;

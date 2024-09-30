@@ -3,6 +3,7 @@ package com.dreamwork.entities;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.Comparator;
 import java.util.List;
 
 import com.dreamwork.game.Game;
@@ -31,6 +32,7 @@ public class Entity {
 	protected int maskx,  masky,  mwidth,  mheight;
 	protected List<Node> path;
 	
+	public int depth;
 	
 	public Entity(int x, int y, int width, int height, BufferedImage sprite)
 	{
@@ -44,6 +46,21 @@ public class Entity {
 		this.mwidth = width;
 		this.mheight = height;
 	}
+	
+	public static Comparator<Entity> nodeSorter = new Comparator<Entity>()
+	{
+	@Override
+	
+	public int compare(Entity n0, Entity n1)
+	{
+		if(n1.depth < n0.depth)
+		return +1;
+		if(n1.depth > n0.depth)
+		return -1;
+		return 0;
+		
+	}
+	};
 	
 	public boolean isColliding(int xnext, int ynext)
 	{
@@ -73,18 +90,18 @@ public class Entity {
 				Vector2i target = path.get(path.size() - 1).tile;
 				//xprev = x;
 				//yprev = y;
-				if(x < target.x * 16 &&  !isColliding(this.getX()+1, this.getY()))
+				if(x < target.x * 16 )
 				{
 					x++;
-				}else if(x > target.x * 16 &&  !isColliding(this.getX()-1, this.getY()))
+				}else if(x > target.x * 16 )
 				{
 					x--;
 				}
 				
-				if(y < target.y * 16 &&  !isColliding(this.getX(), this.getY() +1))
+				if(y < target.y * 16 )
 				{
 					y++;
-				}else if(y > target.y * 16 &&  !isColliding(this.getX(), this.getY() - 1))
+				}else if(y > target.y * 16 )
 				{
 					y--;
 				}

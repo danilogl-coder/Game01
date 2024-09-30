@@ -47,7 +47,7 @@ public class World {
 					else if(pixelAtual == 0xFF00E51A)
 					{
 						//Grama 2
-						tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16,yy*16,Tile.Tile_Grass2);
+						tiles[xx + (yy * WIDTH)] = new FloorTileGrass(xx*16,yy*16,Tile.Tile_Grass2);
 					}
 					else if(pixelAtual == 0xFF404040)
 					{
@@ -96,6 +96,7 @@ public class World {
 	{
 		 Game.entities.clear();
 		 Game.enemies.clear();
+		 Game.bullet.clear();
 		 Game.entities = new ArrayList<Entity>();
 		 Game.enemies = new ArrayList<EnemySlime>();
 		 Game.spritesheet = new Spritesheet("/spritesheet.png");
@@ -141,6 +142,73 @@ public class World {
 		
 	}
 	
+	public static void renderMiniMap()
+	{
+		for(int i = 0; i < Game.minimapaPixels.length; i++)
+		{
+			Game.minimapaPixels[i] = 0; 
+		}
+		
+		for(int xx = 0; xx < WIDTH; xx++)
+		{
+			for(int yy = 0; yy < HEIGHT; yy++)
+			{
+				if(tiles[xx + (yy * WIDTH)] instanceof WallTile)
+				{
+					Game.minimapaPixels[xx + (yy * WIDTH)] = 0xff404040; 
+				}
+			}
+		}
+		
+		for(int xx = 0; xx < WIDTH; xx++)
+		{
+			for(int yy = 0; yy < HEIGHT; yy++)
+			{
+				if(tiles[xx + (yy * WIDTH)] instanceof FloorTile)
+				{
+					Game.minimapaPixels[xx + (yy * WIDTH)] = 0xff00FF21; 
+				}
+			}
+		}
+		
+		//Grama 2
+		
+		for(int xx = 0; xx < WIDTH; xx++)
+		{
+			for(int yy = 0; yy < HEIGHT; yy++)
+			{
+				
+				if(tiles[xx + (yy * WIDTH)] instanceof FloorTileGrass )
+				{
+					Game.minimapaPixels[xx + (yy * WIDTH)] = 0xff00E51A; 
+				}
+			}
+		}
+		
+		
+		
+		
+		int xPlayer = Game.player.getX() / 16;
+		int yPlayer = Game.player.getY() / 16;
+		
+		Game.minimapaPixels[xPlayer + (yPlayer * WIDTH)] = 0xffFF7F7F;
+		
+		for(int xx = 0; xx < WIDTH; xx++)
+		{
+			for(int yy = 0; yy < HEIGHT; yy++)
+			{
+				for(int i = 0; i < Game.enemies.size(); i++)
+				{
+				 int xEnemy = Game.enemies.get(i).getX() / 16;
+				 int yEnemy = Game.enemies.get(i).getY() / 16;
+				 
+				 Game.minimapaPixels[xEnemy + (yEnemy * WIDTH)] = 0xff7F0000; 
+				}
+			}
+		}
+		
+		
+	}
 	public void render(Graphics g) 
 	{
 		int xstart = Camera.x >> 4;

@@ -73,7 +73,7 @@ public class AStar {
 						if(i == 0)
 						{
 							Tile text = World.tiles[x+xi+1+((y+yi) * World.WIDTH)];
-							Tile text2 = World.tiles[x+xi+1+((y+yi) * World.WIDTH)];
+							Tile text2 = World.tiles[x+xi+((y+yi+1) * World.WIDTH)];
 							if(text instanceof WallTile || text2 instanceof WallTile)
 							{
 								continue;
@@ -81,8 +81,8 @@ public class AStar {
 						}
 						else if(i == 2)
 						{
-							Tile text = World.tiles[x+xi+1+((y+yi) * World.WIDTH)];
-							Tile text2 = World.tiles[x+xi+((y+yi) * World.WIDTH)];
+							Tile text = World.tiles[x+xi-1+((y+yi) * World.WIDTH)];
+							Tile text2 = World.tiles[x+xi+((y+yi+1) * World.WIDTH)];
 							if(text instanceof WallTile || text2 instanceof WallTile)
 							{
 								continue;

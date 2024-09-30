@@ -18,6 +18,7 @@ import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -67,6 +68,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public int[] pixels;
 	public BufferedImage lightmap;
 	public int[] lightMapPixels;
+	public static int[] minimapaPixels;
+	
+	public static BufferedImage minimapa;
 	
 	// -- INICIALIZADOR TICK(FPS - GAME )-- //
 	boolean isRunning = true;
@@ -109,6 +113,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	 player = new Player(0,0,16,16,spritesheet.getSprite(35, 1, 16, 16));
 	 entities.add(player);
 	 world = new World("/level1.png");
+	 
+	 minimapa = new BufferedImage(World.WIDTH, World.HEIGHT, BufferedImage.TYPE_INT_RGB);
+	 minimapaPixels =  ((DataBufferInt)minimapa.getRaster().getDataBuffer()).getData();
 	 
 	 /* New font
 	 try {
@@ -251,7 +258,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			
 			//--- World ------//
 			world.render(g);
-			
+			//-- Sort Depth -- //
+			Collections.sort(entities, Entity.nodeSorter);
 			//--- Entities ---//
 			 for(int i = 0; i < entities.size(); i++)
 			 {
@@ -311,6 +319,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			g.setColor(Color.red);
 			g.fillRect(200, 200, 50, 50);
 			*/
+		    
+		    World.renderMiniMap();
+		    g.drawImage(minimapa,600,80,World.WIDTH*5,World.HEIGHT*5, null);
 			bs.show();
 	 }
 	 //Função principal
